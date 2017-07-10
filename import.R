@@ -49,22 +49,32 @@ dat$Cancer[grep("Prostate", dat$Cancer, ignore.case=TRUE)] <- "Prostate"
 dat$Cancer[grep("Breast cancer", dat$Cancer, ignore.case=TRUE)] <- "Breast"
 dat$Cancer[grep("Myeloma", dat$Cancer, ignore.case=TRUE)] <- "Myeloma"
 dat$Cancer[grep("Colorectal", dat$Cancer, ignore.case=TRUE)] <- "Colorectal"
+dat$Cancer[grep("Colon", dat$Cancer, ignore.case=TRUE)] <- "Colorectal"
 dat$Cancer[grep("Esophageal", dat$Cancer, ignore.case=TRUE)] <- "Esophageal"
 dat$Cancer[grep("Pancreatic", dat$Cancer, ignore.case=TRUE)] <- "Pancreatic"
 dat$Cancer[grep("Lung", dat$Cancer, ignore.case=TRUE)] <- "Lung"
 dat$Cancer[grep("Cervical", dat$Cancer, ignore.case=TRUE)] <- "Cervical"
+dat$Cancer[grep("Ovarian", dat$Cancer, ignore.case=TRUE)] <- "Ovarian"
+dat$Cancer[grep("Bladder", dat$Cancer, ignore.case=TRUE)] <- "Bladder"
+dat$Cancer[grep("Glioma", dat$Cancer, ignore.case=TRUE)] <- "Glioma"
+dat$Cancer[grep("Osteo", dat$Cancer, ignore.case=TRUE)] <- "Osteosarcoma"
+dat$Cancer[grep("Gastric", dat$Cancer, ignore.case=TRUE)] <- "Gastric"
+dat$Cancer[grep("Hepatoc", dat$Cancer, ignore.case=TRUE)] <- "Hepatocellular"
 
 dat <- dat %>% filter(!grepl("adverse", Cancer, ignore.case=TRUE))
 dat <- dat %>% filter(!grepl("obesity", Cancer, ignore.case=TRUE))
+dat <- dat %>% filter(!grepl("smok", Cancer, ignore.case=TRUE))
+dat <- dat %>% filter(!grepl("response", Cancer, ignore.case=TRUE))
+dat <- dat %>% filter(!grepl("toxicity", Cancer, ignore.case=TRUE))
 
 unique(dat$Cancer)
 
 N <- nrow(dat)
-ggplot(dat, aes(1:N, OR, colour=Cancer)) + 
+ggplot(dat %>% arrange(Cancer), aes(1:N, OR, colour=Cancer)) + 
   geom_point(alpha = 1/10) +
   labs(x="Study", y = "OR") + 
   guides(fill=FALSE, colour=guide_legend(title=" ")) + 
-  theme(legend.position="none") +
-  theme_classic()
+  theme_classic() +
+  theme(legend.position="none")
 
 
