@@ -8,6 +8,7 @@ options(stringsAsFactors=FALSE)
 library(readr)
 library(dplyr)
 library(ggplot2)
+library(plotly)
 
 #####################################################################################
 # downloaded from http://www.ebi.ac.uk/gwas/ with search "cancer"
@@ -69,12 +70,19 @@ dat <- dat %>% filter(!grepl("toxicity", Cancer, ignore.case=TRUE))
 
 unique(dat$Cancer)
 
-N <- nrow(dat)
-ggplot(dat %>% arrange(Cancer), aes(1:N, OR, colour=Cancer)) + 
+captured <- c("Skin", "Blood", "Prostate", "Breast", "Myeloma", 
+              "Colorectal", "Esophageal", "Pancreatic", "Lung",
+              "Cervical", "Ovarian", "Bladder", "Glioma", 
+              "Osteosarcoma", "Gastric", "Hepatocellular")
+
+plotdat <- dat %>% filter(Cancer %in% captured) %>% arrange(Cancer)
+N <- nrow(plotdat)
+p <- ggplot(plotdat, aes(1:N, OR, colour=Cancer)) + 
   geom_point(alpha = 1/10) +
   labs(x="Study", y = "OR") + 
+  coord_cartesian(ylim=c(1,25)) +
   guides(fill=FALSE, colour=guide_legend(title=" ")) + 
-  theme_classic() +
-  theme(legend.position="none")
-
-
+  theme_classic() 
+  #theme(legend.position="none")
+p
+ggplotly(p, width=1100, height=600)
